@@ -6,13 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "node --env-file .env --watch src/index.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
   "dependencies": {
     "express": "^4.21.1",
     "morgan": "^1.10.0",
+    "node-postgresql-restapi": "file:",
     "pg": "^8.11.5"
   },
   "devDependencies": {
