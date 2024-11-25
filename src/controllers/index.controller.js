@@ -11,6 +11,37 @@ export const getUserById = async (req, res) => {
   res.json(response.rows);
 };
 
+export const createTable = async (req, res) => {
+  try {
+    const createTableQuery = `
+      DROP TABLE IF EXISTS users;
+
+      CREATE TABLE users (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(40),
+          email TEXT NOT NULL UNIQUE,
+          created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+
+      INSERT INTO users (name, email)
+          VALUES ('joe', 'joe@ibm.com'),
+                 ('ryan', 'ryan@faztweb.com');
+    `;
+
+    // Ejecutar las consultas de creación de tabla e inserción
+    await pool.query(createTableQuery);
+
+    // Obtener los datos insertados
+    const result = await pool.query("SELECT * FROM users");
+
+    res.status(200).json(result.rows); // Devolver los datos insertados
+  } catch (error) {
+    console.error("Error creating table:", error.message);
+    res.status(500).json({ error: "Failed to create table or insert data" });
+  }
+};
+
+
 export const createUser = async (req, res) => {
   try {
     const { name, email } = req.body;
