@@ -6,28 +6,27 @@ import { PORT } from "./config.js";
 
 const app = express();
 
-// Middlewares
 app.use(morgan("dev"));
 
-// Configuración de CORS para permitir solicitudes desde el dominio de Netlify
-const allowedOrigins = ["https://idyllic-pothos-c76aef.netlify.app"];
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  }
-}));
-
+// middlewares
 app.use(express.json());
+const allowedOrigins = ['http://frontend:4200', 'http://localhost:4200'];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+};
+
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 
-// Rutas
 app.use(usersRoutes);
 
-// Inicio del servidor
-app.listen(PORT, () => {
-  console.log("Server on port", PORT);
-});
+app.listen(PORT);
+// eslint-disable-next-line no-console
+console.log("Server on port", PORT);
